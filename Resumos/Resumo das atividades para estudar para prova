@@ -1,0 +1,64 @@
+//Codigo do programa em VB(#C) para criar uma tabela de produtos e preços e somar tudo 
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using Microsoft.VisualBasic;
+
+namespace PAtividadeExtraAulaPratica19._05
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+      
+        private void btnExecutar_Click(object sender, EventArgs e) //evento click que vai ser executado quando o sistema
+        {
+
+            double[,] valores = new double[7, 5];  //criação da matris de 
+
+            double[] totalDias = new double[7];
+            string[] diaSemana = { "domigo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sabado" };
+
+            for (int i = 0; i < 7; i++)
+                for (int j = 0; j < 5; j++)
+                {
+                    string aux = Interaction.InputBox($"Digite os valores do produto{j + 1} diaSemana{diaSemana[i]}", "Entrada de Dados");
+
+
+                    if (aux == "")
+                        return;
+
+                    if (!double.TryParse(aux, out valores[i, j]) || valores[i, j] <= 0)
+                    {
+                        MessageBox.Show("Valor incorreto, digite novamente");
+                        j--;
+
+                    }
+                    else
+                    {
+                        totalDias[i] += valores[i, j];
+                    }
+
+                }
+            double totalGeral = 0;
+
+
+            for (int i = 0; i < 7; i++)
+            {
+                lstbxSaida.Items.Add($"Soma do prodtuso no dia {diaSemana[i]} é igual: {totalDias[i].ToString("C2")}");
+                totalGeral += totalDias[i];
+            }
+
+            lstbxSaida.Items.Add("---------");
+            lstbxSaida.Items.Add($"A soma de todos os produtos de todos os dias é: {totalGeral.ToString("C2")}");
+        }
+    }
+}

@@ -1,0 +1,84 @@
+public partial class frmAlunos : Form
+{
+    // Criamos o vetor global com 20 posições para armazenar objetos do tipo Aluno
+    private Aluno[] vetorAlunos = new Aluno[20];
+    
+    // Contador para saber quantos alunos já foram inseridos pelo usuário
+    private int indiceAtual = 0;
+
+    public frmAlunos()
+    {
+        InitializeComponent();
+    }
+
+    // BOTÃO SALVAR / INSERIR ALUNO
+    private void btnSalvar_Click(object sender, EventArgs e)
+    {
+        // Validação de limite do vetor
+        if (indiceAtual >= 20)
+        {
+            MessageBox.Show("O vetor de 20 alunos já está completamente cheio!", "Aviso");
+            return;
+        }
+
+        // Validação dos campos da tela
+        if (string.IsNullOrWhiteSpace(txtNome.Text))
+        {
+            MessageBox.Show("Digite o nome do aluno.");
+            return;
+        }
+        if (!double.TryParse(txtNota.Text, out double notaObtida) || notaObtida < 0 || notaObtida > 10)
+        {
+            MessageBox.Show("Digite uma nota válida entre 0 e 10.");
+            return;
+        }
+
+        // Instanciamos o objeto Aluno e jogamos dentro da posição atual do vetor
+        Aluno novoAluno = new Aluno();
+        novoAluno.Nome = txtNome.Text;
+        novoAluno.Nota = notaObtida;
+
+        vetorAlunos[indiceAtual] = novoAluno;
+        indiceAtual++; // Avança para a próxima posição livre
+
+        // Limpeza de usabilidade básica
+        txtNome.Clear();
+        txtNota.Clear();
+        txtNome.Focus();
+
+        MessageBox.Show($"Aluno cadastrado com sucesso! ({indiceAtual}/20)");
+    }
+
+    // BOTÃO CALCULAR MÉDIA E EXIBIR MAIORES
+    private void btnCalcular_Click(object sender, EventArgs e)
+    {
+        if (indiceAtual == 0)
+        {
+            MessageBox.Show("Nenhum aluno cadastrado até o momento.");
+            return;
+        }
+
+        double somaNotas = 0;
+
+        // 1. Somar apenas as posições que foram preenchidas (até o indiceAtual)
+        for (int i = 0; i < indiceAtual; i++)
+        {
+            somaNotas += vetorAlunos[i].Nota;
+        }
+
+        double mediaGeral = somaNotas / indiceAtual;
+        lblMedia.Text = $"Média Geral: {mediaGeral:F2}";
+
+        // 2. Varrer o vetor novamente para descobrir quem ficou acima da média
+        lstResultados.Items.Clear(); // Limpa o ListBox antes de listar
+        
+        for (int i = 0; i < indiceAtual; i++)
+        {
+            if (vetorAlunos[i].Nota > mediaGeral)
+            {
+                // Adiciona o nome e a nota do aluno no componente ListBox da tela
+                lstResultados.Items.Add($"{vetorAlunos[i].Nome} - Nota: {vetorAlunos[i].Nota:F1}");
+            }
+        }
+    }
+}

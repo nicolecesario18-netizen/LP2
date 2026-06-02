@@ -1,0 +1,66 @@
+public partial class frmInversor : Form
+{
+    // Vetor para armazenar os 10 números reais
+    private double[] numeros = new double[10];
+    private int contador = 0;
+
+    public frmInversor()
+    {
+        InitializeComponent();
+    }
+
+    // BOTÃO ADICIONAR NÚMERO
+    private void btnAdicionar_Click(object sender, EventArgs e)
+    {
+        if (contador >= 10)
+        {
+            MessageBox.Show("Você já inseriu os 10 números requeridos!");
+            return;
+        }
+
+        if (!double.TryParse(txtNumero.Text, out double numDigitado))
+        {
+            MessageBox.Show("Por favor, insira um número válido.");
+            return;
+        }
+
+        // Guarda no vetor e incrementa o contador
+        numeros[contador] = numDigitado;
+        contador++;
+
+        txtNumero.Clear();
+        txtNumero.Focus();
+
+        // Feedback visual para o aluno saber quantos faltam na prova
+        lblStatus.Text = $"Números inseridos: {contador} de 10";
+    }
+
+    // BOTÃO INVERTER E EXIBIR
+    private void btnInverter_Click(object sender, EventArgs e)
+    {
+        if (contador < 10)
+        {
+            MessageBox.Show($"Introduza todos os 10 números primeiro. Faltam {10 - contador}.");
+            return;
+        }
+
+        lstNumeros.Items.Clear();
+
+        // A Mágica da Inversão: Iniciamos o loop for na última posição do vetor (9) 
+        // e decrementamos (i--) até chegar na primeira posição (0)
+        for (int i = 9; i >= 0; i--)
+        {
+            lstNumeros.Items.Add($"Posição [{i}]: {numeros[i]}");
+        }
+    }
+
+    // BOTÃO LIMPAR TUDO
+    private void btnLimpar_Click(object sender, EventArgs e)
+    {
+        numeros = new double[10]; // Cria um novo vetor vazio descartando o antigo
+        contador = 0;
+        lstNumeros.Items.Clear();
+        lblStatus.Text = "Números inseridos: 0 de 10";
+        txtNumero.Focus();
+    }
+}

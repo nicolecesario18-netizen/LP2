@@ -1,0 +1,74 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using Microsoft.VisualBasic;
+using static System.Windows.Forms.LinkLabel;
+
+namespace WindowsFormsApp1
+{
+    public partial class Form1 : Form
+    {
+        private object lstResultados;
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void btnCalcular_Click(object sender, EventArgs e)
+        {
+            double[,] valores = new double[5, 4]; //criaçao do vetor linhas, colunas 
+            string[] Setor = { "Produçao", "Escritorio", "Refeitorio", "Limpeza", "logistica" }; //Criaçao do nomes dos setores 
+                                                                                                 //pedidos no exercicio 
+
+            lstResultados.Itens.Clear(); //insere algo no listbox
+
+            for (int linha = 0, linha < 5, linha++) //percorre as linhas 
+            {
+                for (int coluna = 0; coluna < 4, coluna++)//percorre as colunas, essas vao ser percorridas primeiro
+                {
+                    string prompt = $"Digite o consumo em litros por setor: \n" +
+                                    $"[{Setor[linhas]} - Semana {coluna + 1}";
+                    string titulo = "Entrada de Dados - PConsumo";
+                    string leitura = Interaction.InputBox(prompt, titulo, "0"); //mostra a janela na tela e armazena o que o usuario digitar na tela
+
+                    if (!double.TryParse(leitura, out valores[linha, coluna])) //valida os dados
+                    {
+                        MessageBox.Show("valor invalido, digite novamente");
+                        valores[linha, coluna] = linha--;
+                    }
+
+                }
+
+            }
+            double totalLitros = 0;
+            lstResultados.Items.Add("Saida:");
+
+
+            for (int linha = 0; linha < 5; linha++)
+            {
+                double totalSetorLitros = 0;
+
+                for (int coluna = 0; coluna < 4; coluna++)
+                {
+                    totalSetorLitros += consumo[linha, coluna];
+                }
+                double custoSetor = totalSetorLitros * 0.01;
+
+                totalSetorLitros += totalSetorLitros;
+
+                lstResultados.Items.Add($"{setores[linha]}: {totalSetorLitros:N0} L - {custoSetor: C2}");
+
+
+                double totalCusto = totalLitros * PRECO_LITRO;
+                lstResultados.Items.Add("");
+
+            }
+        }
+    }
